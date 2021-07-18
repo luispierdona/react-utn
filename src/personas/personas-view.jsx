@@ -1,14 +1,13 @@
 import React from 'react';
 import PersonasTable from './personas-table';
-
+import PersonasTopBar from './personas-topbar';
 
 function PersonasView() {
 
   return (
     <>
-      <h1>Listado de Personas</h1>
+      {/* <PersonasTopBar /> */}
       <PersonasTable />
-
     </>
   );
 }

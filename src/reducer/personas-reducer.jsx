@@ -1,6 +1,7 @@
 
 const estadoInicial = {
   personasList: [],
+  librosByPersona: [],
 };
 
 function personasReducer(state = estadoInicial, action) {
@@ -10,10 +11,13 @@ function personasReducer(state = estadoInicial, action) {
       nuevoState.personasList = action.personasList;
       return nuevoState;
     case 'AGREGAR_PERSONA':
-      nuevoState.personas.push(action.personas);
+      nuevoState.personasList.push(action.persona);
       return nuevoState;
     case 'DELETE_PERSONA':
       nuevoState.personas = nuevoState.personas.filter((x) => x.id !== action.id);
+      return nuevoState;
+    case 'LIBROS_BY_PERSONA':
+      nuevoState.librosByPersona = action.librosByPersona;
       return nuevoState;
     default:
       return state;
