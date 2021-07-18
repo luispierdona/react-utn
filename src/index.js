@@ -3,10 +3,26 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import allReducers from './reducer';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Header from './topbar/header';
+
+const store = createStore(allReducers);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      {/* <App /> */}
+      <Router>
+        <Header />
+        <Switch>
+          <Route exact path='/' component={App}></Route>
+        </Switch>
+      </Router>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
