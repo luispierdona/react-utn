@@ -9,11 +9,19 @@ function PersonasTable() {
 
   useEffect(() => {
     async function fetchData() {
-      const respuesta = await axios.get('https://jsonplaceholder.typicode.com/posts');
-      dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
+      try {
+        const respuesta = await axios.get('http://localhost:3000/personas');
+        dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
+      } catch (error) {
+        console.log(error);
+      }
     }
     fetchData();
   }, []);
+
+  useEffect( () => {
+    console.log(personasRow);
+  }, [personasRow]);
 
   return (
     <>
@@ -21,7 +29,9 @@ function PersonasTable() {
       <ul>
         {personasRow.map((row) => (
           <li key={row.id}>
-            <label>{row.title}</label>
+            <label>{row.nombre}</label>
+            <label>{row.apellido}</label>
+            <label>{row.email}</label>
           </li>
         ))}
       </ul>
