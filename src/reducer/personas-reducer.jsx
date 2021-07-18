@@ -1,13 +1,13 @@
 
 const estadoInicial = {
-  posteos: [],
+  personasList: [],
 };
 
 function personasReducer(state = estadoInicial, action) {
   const nuevoState = JSON.parse(JSON.stringify(state));
   switch (action.type) {
     case 'LISTAR_PERSONAS':
-      nuevoState.personas = action.personasList;
+      nuevoState.personasList = action.personasList;
       return nuevoState;
     case 'AGREGAR_PERSONA':
       nuevoState.personas.push(action.personas);
