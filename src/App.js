@@ -3,13 +3,16 @@ import PersonasView from './personas/personas-view';
 // import { Navbar, Nav, Container, NavItem } from 'react-bootstrap';
 // import { BrowserRouter as Router, Route } from 'react-router-dom';
 // import { Switch, Link } from 'react-router-dom';
+import { ToastProvider } from 'react-toast-notifications';
 
 // bg="dark" variant="dark"
 function App() {
   return (
     <div className="App">
       <>
-      {/* <div>
+        <ToastProvider>
+
+          {/* <div>
         <div>
           <Navbar>
             <Navbar.Brand as={Link} to="/" >React-Bootstrap</Navbar.Brand>
@@ -31,9 +34,11 @@ function App() {
           </Switch>
         </div>
       </div> */}
-      <PersonasView />
+          <PersonasView />
+        </ToastProvider>
       </>
     </div>
+
   );
 }
 

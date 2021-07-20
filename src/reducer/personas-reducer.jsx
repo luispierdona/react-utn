@@ -2,6 +2,7 @@
 const estadoInicial = {
   personasList: [],
   librosByPersona: [],
+  personaToDelete: {},
 };
 
 function personasReducer(state = estadoInicial, action) {
@@ -14,7 +15,7 @@ function personasReducer(state = estadoInicial, action) {
       nuevoState.personasList.push(action.persona);
       return nuevoState;
     case 'DELETE_PERSONA':
-      nuevoState.personas = nuevoState.personas.filter((x) => x.id !== action.id);
+      nuevoState.personaToDelete = action.personaToDelete;
       return nuevoState;
     case 'LIBROS_BY_PERSONA':
       nuevoState.librosByPersona = action.librosByPersona;

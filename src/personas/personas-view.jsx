@@ -1,13 +1,16 @@
 import React from 'react';
 import PersonasTable from './personas-table';
-import PersonasTopBar from './personas-topbar';
+import PersonasTableTopbar from './personas-table-topbar';
+import { Container } from 'react-bootstrap';
 
 function PersonasView() {
 
   return (
     <>
-      {/* <PersonasTopBar /> */}
-      <PersonasTable />
+      <Container>
+        <PersonasTableTopbar />
+        <PersonasTable />
+      </Container>
     </>
   );
 }
