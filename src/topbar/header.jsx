@@ -7,16 +7,16 @@ const Header = () => {
     <Navbar bg="dark" variant="dark">
       <Container>
       <LinkContainer to='/'>
-        <Navbar.Brand>React-bootstrap</Navbar.Brand>
+        <Navbar.Brand>Biblioteca</Navbar.Brand>
       </LinkContainer>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <LinkContainer to="/service">
-            <Nav.Link>Service</Nav.Link>
+          <LinkContainer to="/categorias">
+            <Nav.Link>Categorias</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/about">
-            <Nav.Link>About</Nav.Link>
+          <LinkContainer to="/personas">
+            <Nav.Link>Personas</Nav.Link>
           </LinkContainer>
         </Nav>
       </Navbar.Collapse>

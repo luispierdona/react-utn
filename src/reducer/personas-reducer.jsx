@@ -1,4 +1,3 @@
-
 const estadoInicial = {
   personasList: [],
   librosByPersona: [],

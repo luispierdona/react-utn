@@ -10,6 +10,9 @@ import { createStore } from 'redux';
 import allReducers from './reducer';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Header from './topbar/header';
+import { ToastProvider } from 'react-toast-notifications';
+import LibrosView from './libros/libros-view';
+import CategoriasView from './categorias/categorias-view';
 
 const store = createStore(
   allReducers,
@@ -18,15 +21,19 @@ const store = createStore(
 
 ReactDOM.render(
 
-    <Provider store={store}>
-      {/* <App /> */}
-      <Router>
-        <Header />
-        <Switch>
-          <Route exact path='/' component={App}></Route>
-        </Switch>
-      </Router>
-    </Provider>,
+  <Provider store={store}>
+    {/* <App /> */}
+    <Router>
+      <Header />
+      <Switch>
+        <ToastProvider>
+          <Route exact path='/' component={LibrosView}></Route>
+          <Route exact path='/categorias' component={CategoriasView}></Route>
+          <Route exact path='/personas' component={App}></Route>
+        </ToastProvider>
+      </Switch>
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
 
