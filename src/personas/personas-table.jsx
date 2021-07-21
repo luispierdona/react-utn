@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 import PersonasDeleteOverlay from './personas-delete-overlay';
 import { useToasts } from 'react-toast-notifications'
 import PersonasVerLibrosOverlay from './personas-ver-libros-overlay';
+import { getPersonas } from '../service/personas-service';
 
 function PersonasTable() {
   const dispatch = useDispatch();
@@ -20,8 +21,10 @@ function PersonasTable() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const respuesta = await axios.get('http://localhost:3000/personas');
-        dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
+        // const respuesta = await axios.get('http://localhost:3000/personas');
+        // dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
+        const getLibros = await getPersonas();
+        dispatch({ type: 'LISTAR_PERSONAS', personasList: getLibros.data });
       } catch (error) {
         console.log(error);
         addToast(error.ERROR, { appearance: 'success', autoDismiss: true })
