@@ -3,13 +3,15 @@ import { Modal, Button } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
 
 function PersonasAgregarOverlay(props) {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
   const [validated, setValidated] = useState(false);
+
+  const personaToSave = useSelector(state => state.personas.personaToSave);
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -19,9 +21,7 @@ function PersonasAgregarOverlay(props) {
     }
 
     setValidated(true);
-    if (form.checkValidity() === true) {
-      handleSaveForm();
-    }
+    handleSaveForm();
   };
 
   const [stateForm, setStateForm] = useState({
@@ -33,6 +33,7 @@ function PersonasAgregarOverlay(props) {
 
   useEffect(() => {
     console.log(stateForm);
+    dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: stateForm });
   }, [stateForm]);
 
   function handleChangeForm(evt) {
@@ -45,17 +46,21 @@ function PersonasAgregarOverlay(props) {
 
   const handleSaveForm = async () => {
     try {
-      console.log('Form to save: ', stateForm);
 
-      const serverResponse = await axios.post('http://localhost:3000/persona', stateForm);
+      const serverResponse = await axios.post('http://localhost:3000/persona', personaToSave);
+      
       const respuesta = await axios.get('http://localhost:3000/personas');
       dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
 
+      dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: {} });
+
       addToast(serverResponse?.data?.Respuesta, { appearance: 'success', autoDismiss: true });
+      props.onHide();
     } catch (e) {
       // Informar al usuario que no se pudo borrar
       console.log(e.message);
       addToast(e.request.response, { appearance: 'error', autoDismiss: true });
+      // props.onHide();
     }
   };
 
@@ -73,7 +78,7 @@ function PersonasAgregarOverlay(props) {
       </Modal.Header>
       <Modal.Body>
         <Container>
-          <Form noValidate validated={validated}>
+          <Form validated={validated}>
 
             <Row className="mb-3">
               <Form.Group as={Col} md="6" controlId="validationNombre">
@@ -139,14 +144,20 @@ function PersonasAgregarOverlay(props) {
                 </Form.Control.Feedback>
               </Form.Group>
             </Row>
+
+            <hr />
+            <div className="float-right">
+              <Button variant="primary" onClick={ handleSubmit } className="m-3">Agregar</Button>
+              <Button variant="outline-danger" onClick={props.onHide} className="m-3">Cerrar</Button>
+            </div>
           </Form>
 
         </Container>
       </Modal.Body>
-      <Modal.Footer>
+      {/* <Modal.Footer>
         <Button variant="primary" onClick={handleSubmit}>Agregar</Button>
         <Button variant="outline-danger" onClick={props.onHide}>Cerrar</Button>
-      </Modal.Footer>
+      </Modal.Footer> */}
     </Modal>
   );
 }

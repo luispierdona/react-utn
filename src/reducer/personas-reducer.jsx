@@ -3,6 +3,7 @@ const estadoInicial = {
   personasList: [],
   librosByPersona: [],
   personaToDelete: {},
+  personaToSave: {},
 };
 
 function personasReducer(state = estadoInicial, action) {
@@ -11,8 +12,8 @@ function personasReducer(state = estadoInicial, action) {
     case 'LISTAR_PERSONAS':
       nuevoState.personasList = action.personasList;
       return nuevoState;
-    case 'AGREGAR_PERSONA':
-      nuevoState.personasList.push(action.persona);
+    case 'PERSONA_TO_SAVE':
+      nuevoState.personaToSave = action.personaToSave;
       return nuevoState;
     case 'DELETE_PERSONA':
       nuevoState.personaToDelete = action.personaToDelete;

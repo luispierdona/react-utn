@@ -62,7 +62,7 @@ function PersonasDeleteOverlay(props) {
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="outline-danger" onClick={handleSubmit}>Borrar</Button>
+        <Button variant="outline-danger" onClick={ () => {handleSubmit(); props.onHide()} } >Borrar</Button>
         <Button variant="primary" onClick={props.onHide}>Cerrar</Button>
       </Modal.Footer>
     </Modal>
