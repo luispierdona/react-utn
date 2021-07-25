@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 function LibrosVerPersonasOverlay(props) {
 
-  const personaByLibros = useSelector(state => state.libros.personaByLibros);
+  const libroPrestadoA = useSelector(state => state.libros.libroPrestadoA);
 
   return (
     <Modal
@@ -20,9 +20,9 @@ function LibrosVerPersonasOverlay(props) {
       </Modal.Header>
       <Modal.Body>
         <p>
-          {personaByLibros.length > 0 ?
+          {libroPrestadoA.length > 0 ?
             <ListGroup variant="flush">
-              {personaByLibros.map((row, index) => (
+              {libroPrestadoA.map((row, index) => (
                 <ListGroup.Item key={index}>
                   <b>{index} | </b>
                   <b>Nombre </b>{row.nombre}

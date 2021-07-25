@@ -70,4 +70,4 @@ function LibrosDeleteOverlay(props) {
 
 }
 
-export default PersonasDeleteOverlay;
+export default LibrosDeleteOverlay;

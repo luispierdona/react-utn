@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
-import { Button } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import PersonasDeleteOverlay from './personas-delete-overlay';
 import { useToasts } from 'react-toast-notifications';
 import PersonasVerLibrosOverlay from './personas-ver-libros-overlay';
 import { getPersonas } from '../service/personas-service';
+import PersonasEditOverlay from './personas-edit-overlay';
 
 function PersonasTable() {
   const dispatch = useDispatch();
@@ -53,6 +54,21 @@ function PersonasTable() {
     setDeleteModalShow(true);
   };
 
+  const handleEdit = (row) => {
+    dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: row });
+
+  };
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">Popover right</Popover.Header>
+      <Popover.Body>
+        And here's some <strong>amazing</strong> content. It's very engaging.
+        right?
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <>
       {personasRow.length > 0 ?
@@ -80,9 +96,12 @@ function PersonasTable() {
                     <Button variant="light"
                       onClick={() => handleVerLibros(row.id)}>Libros
                     </Button>{' '}
-                    <Button variant="info">
+                    {/* <Button variant="info">
                       <i className="fa fa-pencil" aria-hidden="true" />
-                    </Button>{' '}
+                    </Button>{' '} */}
+                    <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+                      <Button variant="success">Click me to see</Button>
+                    </OverlayTrigger>
                     <Button variant="danger"
                       onClick={() => handleDelete(row)}>
                       <i className="fa fa-trash" aria-hidden="true" />

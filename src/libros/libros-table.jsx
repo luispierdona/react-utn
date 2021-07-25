@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
 import LibrosDeleteOverlay from './libros-delete-overlay';
 import { useToasts } from 'react-toast-notifications';
-import LibrosVerPersonasOverlay from './libros-ver-libros-overlay';
+import LibrosVerPersonasOverlay from './libros-ver-personas-overlay';
 import { getLibros } from '../service/libros-service';
 
 function LibrosTable() {
@@ -68,7 +68,7 @@ function LibrosTable() {
           </thead>
           <tbody>
             <>
-              {personasRow.map((row, index) => (
+              {librosRow.map((row, index) => (
                 <tr key={index}>
                   <td>{index}</td>
                   <td>{row.libro}</td>
@@ -101,7 +101,7 @@ function LibrosTable() {
       />
 
       {/* DELETE MODAL */}
-      <PersonasDeleteOverlay
+      <LibrosDeleteOverlay
         show={deleteModalShow}
         onHide={() => setDeleteModalShow(false)}
       />

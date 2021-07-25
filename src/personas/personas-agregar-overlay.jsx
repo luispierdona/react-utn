@@ -18,13 +18,15 @@ function PersonasAgregarOverlay(props) {
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
+    } else {
+      setValidated(true);
+      handleSaveForm();
     }
 
-    setValidated(true);
-    handleSaveForm();
   };
 
   const [stateForm, setStateForm] = useState({
+    id: "",
     nombre: "",
     apellido: "",
     email: "",
