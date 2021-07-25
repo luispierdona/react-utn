@@ -1,66 +1,43 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
-import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
-import axios from 'axios';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
+import { saveLibro, getLibros } from '../service/libros-service';
 
 function LibrosAgregarOverlay(props) {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
-  const [validated, setValidated] = useState(false);
 
   const libroToSave = useSelector(state => state.libros.libroToSave);
-
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
-    handleSaveForm();
-  };
-
-  const [stateForm, setStateForm] = useState({
-    nombre: "",
-    apellido: "",
-    email: "",
-    alias: ""
-  });
-
-  useEffect(() => {
-    console.log(stateForm);
-    dispatch({ type: 'LIBRO_TO_SAVE', libroToSave: stateForm });
-  }, [stateForm]);
+  const categorias = useSelector(state => state.categorias.categoriasList);
+  const personas = useSelector(state => state.personas.personasList);
 
   function handleChangeForm(evt) {
     const value = evt.target.value;
-    setStateForm({
-      ...stateForm,
+    const libro = {
+      ...libroToSave,
       [evt.target.name]: value
-    });
+    };
+    dispatch({ type: 'LIBRO_TO_SAVE', libroToSave: libro });
   }
 
   const handleSaveForm = async () => {
     try {
 
-      const serverResponse = await axios.post('http://localhost:3000/libro', libroToSave);
-      
-      const respuesta = await axios.get('http://localhost:3000/libros');
-      dispatch({ type: 'LISTAR_LIBROS', librosList: respuesta.data });
+      const saveLibroResponse = await saveLibro(libroToSave);
+      const getLibrosResponse = await getLibros();
 
+      dispatch({ type: 'LISTAR_LIBROS', librosList: getLibrosResponse.data });
       dispatch({ type: 'LIBRO_TO_SAVE', libroToSave: {} });
 
-      addToast(serverResponse?.data?.Respuesta, { appearance: 'success', autoDismiss: true });
+      addToast(saveLibroResponse?.data?.Respuesta, { appearance: 'success', autoDismiss: true });
       props.onHide();
     } catch (e) {
       // Informar al usuario que no se pudo borrar
       console.log(e.message);
       addToast(e.request.response, { appearance: 'error', autoDismiss: true });
-      // props.onHide();
+      props.onHide();
     }
   };
 
@@ -73,91 +50,75 @@ function LibrosAgregarOverlay(props) {
     >
       <Modal.Header className="text-light bg-dark">
         <Modal.Title id="contained-modal-title-vcenter">
-          Agregar Nueva Libro
+          Agregar Nuevo Libro
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Container>
-          <Form validated={validated}>
+          <Form>
 
             <Row className="mb-3">
               <Form.Group as={Col} md="6" controlId="validationNombre">
                 <Form.Label>Nombre</Form.Label>
                 <Form.Control
-                  required
                   type="text"
                   placeholder="Nombre"
                   name="nombre"
+                  defaultValue={libroToSave?.nombre}
                   onChange={handleChangeForm}
                 />
-                <Form.Control.Feedback>Se ve bien!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  Ingresa un nombre válido
-                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group as={Col} md="6" controlId="validationApellido">
-                <Form.Label>Apellido</Form.Label>
+                <Form.Label>Descripcion</Form.Label>
                 <Form.Control
-                  required
                   type="text"
-                  placeholder="Apellido"
-                  name="apellido"
+                  placeholder="Descripcion"
+                  name="descripcion"
+                  defaultValue={libroToSave?.descripcion}
                   onChange={handleChangeForm}
                 />
-                <Form.Control.Feedback>Se ve bien!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  Ingresa un apellido válido
-                </Form.Control.Feedback>
               </Form.Group>
             </Row>
 
             <Row className="mb-3">
               <Form.Group as={Col} md="6" controlId="validationEmail">
-                <Form.Label>Email</Form.Label>
-                <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-                  <Form.Control
-                    type="email"
-                    placeholder="Email"
-                    aria-describedby="inputGroupPrepend"
-                    required
-                    name="email"
-                    onChange={handleChangeForm}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Ingresa un email válido
-                  </Form.Control.Feedback>
-                </InputGroup>
-              </Form.Group>
-              <Form.Group as={Col} md="6" controlId="validationAlias">
-                <Form.Label>Alias</Form.Label>
+                <Form.Label>Categoria</Form.Label>
                 <Form.Control
-                  required
-                  type="text"
-                  placeholder="Alias"
-                  name="alias"
+                  as="select"
+                  placeholder="Categoria"
+                  name="categoria_id"
                   onChange={handleChangeForm}
-                />
-                <Form.Control.Feedback>Se ve bien!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  Ingresa un alias válido
-                </Form.Control.Feedback>
+                >
+                  <option value="null">Elija una opcion...</option>
+                  {categorias.map((row, index) => (
+                    <option key={index} value={row.id}>{row.nombre}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+
+              <Form.Group as={Col} md="6" controlId="validationAlias">
+                <Form.Label>Persona</Form.Label>
+                <Form.Control
+                  as="select"
+                  placeholder="Persona"
+                  name="persona_id"
+                  onChange={handleChangeForm}
+                >
+                  <option value="null">Elija una opcion...</option>
+                  {personas.map((row, index) => (
+                    <option key={index} value={row.id}>{row.nombre} {row.apellido}</option>
+                  ))}
+                </Form.Control>
               </Form.Group>
             </Row>
-
-            <hr />
-            <div className="float-right">
-              <Button variant="primary" onClick={ handleSubmit } className="m-3">Agregar</Button>
-              <Button variant="outline-danger" onClick={props.onHide} className="m-3">Cerrar</Button>
-            </div>
           </Form>
 
         </Container>
       </Modal.Body>
-      {/* <Modal.Footer>
-        <Button variant="primary" onClick={handleSubmit}>Agregar</Button>
+      <Modal.Footer>
+        <Button variant="primary" onClick={handleSaveForm}>Agregar</Button>
         <Button variant="outline-danger" onClick={props.onHide}>Cerrar</Button>
-      </Modal.Footer> */}
+      </Modal.Footer>
     </Modal>
   );
 }

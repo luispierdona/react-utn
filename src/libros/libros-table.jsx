@@ -21,21 +21,15 @@ function LibrosTable() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // const respuesta = await axios.get('http://localhost:3000/libros');
-        // dispatch({ type: 'LISTAR_LIBROS', librosList: respuesta.data });
         const librosResponse = await getLibros();
         dispatch({ type: 'LISTAR_LIBROS', librosList: librosResponse.data });
       } catch (error) {
         console.log(error);
-        addToast(error.ERROR, { appearance: 'success', autoDismiss: true });
+        addToast(error, { appearance: 'success', autoDismiss: true });
       }
     }
     fetchData();
   }, []);
-
-  useEffect(() => {
-    console.log(librosRow);
-  }, [librosRow]);
 
   const handleVerPersonas = async (id) => {
     try {
@@ -49,6 +43,11 @@ function LibrosTable() {
   };
 
   const handleDelete = (row) => {
+    dispatch({ type: 'DELETE_LIBRO', libroToDelete: row });
+    setDeleteModalShow(true);
+  };
+  
+  const handleEdit = (row) => {
     dispatch({ type: 'DELETE_Libro', libroToDelete: row });
     setDeleteModalShow(true);
   };
@@ -64,6 +63,7 @@ function LibrosTable() {
               <th>Descripcion</th>
               <th>Categoria</th>
               <th>Prestado</th>
+              <th>Opciones</th>
             </tr>
           </thead>
           <tbody>
@@ -71,15 +71,21 @@ function LibrosTable() {
               {librosRow.map((row, index) => (
                 <tr key={index}>
                   <td>{index}</td>
-                  <td>{row.libro}</td>
+                  <td>{row.nombre}</td>
                   <td>{row.descripcion}</td>
-                  <td>{row.categoria}</td>
-                  <td>{row.prestado}</td>
+                  <td>
+                    <Button variant="info">
+                      Ver Categoria
+                    </Button>
+                  </td>
                   <td>
                     <Button variant="light"
-                      onClick={() => handleVerPersonas(row.id)}>Libro prestado a: 
-                    </Button>{' '}
-                    <Button variant="info">
+                      onClick={() => handleVerPersonas(row.id)}>Libro prestado a:
+                    </Button>
+                  </td>
+                  <td>
+                    <Button variant="info"
+                      onClick={() => handleEdit(row)}>
                       <i className="fa fa-pencil" aria-hidden="true" />
                     </Button>{' '}
                     <Button variant="danger"

@@ -1,6 +1,6 @@
 const estadoInicial = {
   categoriasList: [],
-  categoriasByLibro: [],
+  librosByCategoria: [],
   categoriaToDelete: {},
   categoriaToSave: {},
 };

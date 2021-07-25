@@ -45,20 +45,20 @@ function LibrosDeleteOverlay(props) {
         <Container>
           <Row className="mb-3">
             <Col md="6">
-              <span><b>Titulo Libro: </b>{libroToDelete?.libro}</span>
+              <span><b>Titulo Libro: </b>{libroToDelete?.nombre}</span>
             </Col>
             <Col md="6">
               <span><b>Descripcion: </b>{libroToDelete?.descripcion}</span>
             </Col>
           </Row>
-          <Row className="mb-3">
+          {/* <Row className="mb-3">
             <Col md="6">
               <span><b>Categoria: </b>{libroToDelete?.categoria}</span>
             </Col>
             <Col md="6">
               <span><b>Prestado: </b>{libroToDelete?.prestado}</span>
             </Col>
-          </Row>
+          </Row> */}
         </Container>
       </Modal.Body>
       <Modal.Footer>

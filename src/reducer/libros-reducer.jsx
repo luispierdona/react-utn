@@ -1,6 +1,8 @@
 const estadoInicial = {
   librosList: [],
   libroPrestadoA: {},
+  libroToDelete: {},
+  libroToSave: {},
 };
 
 function librosReducer(state = estadoInicial, action) {
@@ -12,12 +14,12 @@ function librosReducer(state = estadoInicial, action) {
     case 'LIBRO_PRESTADO_A':
       nuevoState.libroPrestadoA = action.libroPrestadoA;
       return nuevoState;
-    // case 'PERSONA_TO_SAVE':
-    //   nuevoState.personaToSave = action.personaToSave;
-    //   return nuevoState;
-    // case 'DELETE_PERSONA':
-    //   nuevoState.personaToDelete = action.personaToDelete;
-    //   return nuevoState;
+    case 'LIBRO_TO_SAVE':
+      nuevoState.libroToSave = action.libroToSave;
+      return nuevoState;
+    case 'DELETE_LIBRO':
+      nuevoState.libroToDelete = action.libroToDelete;
+      return nuevoState;
     // case 'LIBROS_BY_PERSONA':
     //   nuevoState.librosByPersona = action.librosByPersona;
     //   return nuevoState;
