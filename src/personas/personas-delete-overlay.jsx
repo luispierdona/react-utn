@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal, Button, Container, Col, Row } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import { useToasts } from 'react-toast-notifications';
+import { borrarPersona, getPersonas } from '../service/personas-service';
 
 function PersonasDeleteOverlay(props) {
   const dispatch = useDispatch();
@@ -13,13 +13,13 @@ function PersonasDeleteOverlay(props) {
   const handleSubmit = async () => {
     try {
       const id = personaToDelete?.id;
-      const serverResponse = await axios.delete('http://localhost:3000/persona/' + id);
-      const respuesta = await axios.get('http://localhost:3000/personas');
+      const deleteResponse = await borrarPersona(id);
+      const getPersonasResponse = await getPersonas();
       
-      dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
+      dispatch({ type: 'LISTAR_PERSONAS', personasList: getPersonasResponse.data });
       dispatch({ type: 'DELETE_PERSONA', personaToDelete: {} });
 
-      addToast(serverResponse?.data?.msg, { appearance: 'success', autoDismiss: true });
+      addToast(deleteResponse?.data?.msg, { appearance: 'success', autoDismiss: true });
     } catch (e) {
       console.log(e.message);
       addToast(e.request.response, { appearance: 'error', autoDismiss: true });

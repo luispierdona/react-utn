@@ -19,7 +19,7 @@ function PersonasVerLibrosOverlay(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
+        <>
           {librosByPersona.length > 0 ?
             <ListGroup variant="flush">
               {librosByPersona.map((row, index) => (
@@ -32,7 +32,7 @@ function PersonasVerLibrosOverlay(props) {
               ))}
             </ListGroup>
             : <p>Persona no debe libros</p>}
-        </p>
+        </>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Cerrar</Button>

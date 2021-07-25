@@ -1,68 +1,40 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
+import { getPersonas, savePersona } from '../service/personas-service';
 
 function PersonasAgregarOverlay(props) {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
-  const [validated, setValidated] = useState(false);
 
   const personaToSave = useSelector(state => state.personas.personaToSave);
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      setValidated(true);
-      handleSaveForm();
-    }
-
-  };
-
-  const [stateForm, setStateForm] = useState({
-    id: "",
-    nombre: "",
-    apellido: "",
-    email: "",
-    alias: ""
-  });
-
-  useEffect(() => {
-    console.log(stateForm);
-    dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: stateForm });
-  }, [stateForm]);
-
   function handleChangeForm(evt) {
     const value = evt.target.value;
-    setStateForm({
-      ...stateForm,
+    const persona = {
+      ...personaToSave,
       [evt.target.name]: value
-    });
+    }
+    dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: persona });
   }
 
   const handleSaveForm = async () => {
     try {
+      const savePersonaResponse = await savePersona(personaToSave);
+      const getPersonasResponse = await getPersonas();
 
-      const serverResponse = await axios.post('http://localhost:3000/persona', personaToSave);
-      
-      const respuesta = await axios.get('http://localhost:3000/personas');
-      dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
+      dispatch({ type: 'LISTAR_PERSONAS', personasList: getPersonasResponse.data });
+      dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: { } });
 
-      dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: {} });
-
-      addToast(serverResponse?.data?.Respuesta, { appearance: 'success', autoDismiss: true });
+      addToast(savePersonaResponse?.data?.Respuesta, { appearance: 'success', autoDismiss: true });
       props.onHide();
-    } catch (e) {
+    } catch (error) {
       // Informar al usuario que no se pudo borrar
-      console.log(e.message);
-      addToast(e.request.response, { appearance: 'error', autoDismiss: true });
-      // props.onHide();
+      console.log(error.message);
+      addToast(error.request.response, { appearance: 'error', autoDismiss: true });
+      props.onHide();
     }
   };
 
@@ -75,41 +47,36 @@ function PersonasAgregarOverlay(props) {
     >
       <Modal.Header className="text-light bg-dark">
         <Modal.Title id="contained-modal-title-vcenter">
-          Agregar Nueva Persona
+          {personaToSave?.id ?
+            <h3>Editar Persona</h3>
+            : <h3>Agregar Persona</h3>
+          }
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Container>
-          <Form validated={validated}>
+          <Form>
 
             <Row className="mb-3">
               <Form.Group as={Col} md="6" controlId="validationNombre">
                 <Form.Label>Nombre</Form.Label>
                 <Form.Control
-                  required
                   type="text"
                   placeholder="Nombre"
                   name="nombre"
+                  defaultValue={personaToSave?.nombre}
                   onChange={handleChangeForm}
                 />
-                <Form.Control.Feedback>Se ve bien!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  Ingresa un nombre válido
-                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group as={Col} md="6" controlId="validationApellido">
                 <Form.Label>Apellido</Form.Label>
                 <Form.Control
-                  required
                   type="text"
                   placeholder="Apellido"
                   name="apellido"
+                  defaultValue={personaToSave?.apellido}
                   onChange={handleChangeForm}
                 />
-                <Form.Control.Feedback>Se ve bien!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  Ingresa un apellido válido
-                </Form.Control.Feedback>
               </Form.Group>
             </Row>
 
@@ -122,44 +89,31 @@ function PersonasAgregarOverlay(props) {
                     type="email"
                     placeholder="Email"
                     aria-describedby="inputGroupPrepend"
-                    required
                     name="email"
+                    defaultValue={personaToSave?.email}
                     onChange={handleChangeForm}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    Ingresa un email válido
-                  </Form.Control.Feedback>
                 </InputGroup>
               </Form.Group>
               <Form.Group as={Col} md="6" controlId="validationAlias">
                 <Form.Label>Alias</Form.Label>
                 <Form.Control
-                  required
                   type="text"
                   placeholder="Alias"
                   name="alias"
+                  defaultValue={personaToSave?.alias}
                   onChange={handleChangeForm}
                 />
-                <Form.Control.Feedback>Se ve bien!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  Ingresa un alias válido
-                </Form.Control.Feedback>
               </Form.Group>
             </Row>
-
-            <hr />
-            <div className="float-right">
-              <Button variant="primary" onClick={ handleSubmit } className="m-3">Agregar</Button>
-              <Button variant="outline-danger" onClick={props.onHide} className="m-3">Cerrar</Button>
-            </div>
           </Form>
 
         </Container>
       </Modal.Body>
-      {/* <Modal.Footer>
-        <Button variant="primary" onClick={handleSubmit}>Agregar</Button>
+      <Modal.Footer>
+        <Button variant="primary" onClick={handleSaveForm}>Agregar</Button>
         <Button variant="outline-danger" onClick={props.onHide}>Cerrar</Button>
-      </Modal.Footer> */}
+      </Modal.Footer>
     </Modal>
   );
 }

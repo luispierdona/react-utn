@@ -1,14 +1,13 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import Table from 'react-bootstrap/Table';
-import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import PersonasDeleteOverlay from './personas-delete-overlay';
 import { useToasts } from 'react-toast-notifications';
 import PersonasVerLibrosOverlay from './personas-ver-libros-overlay';
-import { getPersonas } from '../service/personas-service';
-import PersonasEditOverlay from './personas-edit-overlay';
+import { getPersonas, getLibrosByPersona } from '../service/personas-service';
+import PersonasAgregarOverlay from './personas-agregar-overlay';
 
 function PersonasTable() {
   const dispatch = useDispatch();
@@ -18,34 +17,29 @@ function PersonasTable() {
 
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [verLibrosModalShow, setVerLibrosModalShow] = useState(false);
+  const [editPersonaModalShow, setEditPersonaModalShow] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // const respuesta = await axios.get('http://localhost:3000/personas');
-        // dispatch({ type: 'LISTAR_PERSONAS', personasList: respuesta.data });
         const personasResponse = await getPersonas();
         dispatch({ type: 'LISTAR_PERSONAS', personasList: personasResponse.data });
       } catch (error) {
         console.log(error);
-        addToast(error.ERROR, { appearance: 'success', autoDismiss: true });
+        addToast(error.ERROR, { appearance: 'error', autoDismiss: true });
       }
     }
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    console.log(personasRow);
-  }, [personasRow]);
+  });
 
   const handleVerLibros = async (id) => {
     try {
-      const respuesta = await axios.get('http://localhost:3000/librosByPersona/' + id);
+      const respuesta = await getLibrosByPersona(id);
       dispatch({ type: 'LIBROS_BY_PERSONA', librosByPersona: respuesta.data });
-
       setVerLibrosModalShow(true);
     } catch (error) {
       console.log(error);
+      addToast(error.ERROR, { appearance: 'error', autoDismiss: true });
     }
   };
 
@@ -56,18 +50,8 @@ function PersonasTable() {
 
   const handleEdit = (row) => {
     dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: row });
-
+    setEditPersonaModalShow(true);
   };
-
-  const popover = (
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">Popover right</Popover.Header>
-      <Popover.Body>
-        And here's some <strong>amazing</strong> content. It's very engaging.
-        right?
-      </Popover.Body>
-    </Popover>
-  );
 
   return (
     <>
@@ -76,10 +60,10 @@ function PersonasTable() {
           <thead>
             <tr>
               <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>alias</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Email</th>
+              <th>Alias</th>
               <th>Opciones</th>
             </tr>
           </thead>
@@ -96,12 +80,10 @@ function PersonasTable() {
                     <Button variant="light"
                       onClick={() => handleVerLibros(row.id)}>Libros
                     </Button>{' '}
-                    {/* <Button variant="info">
+                    <Button variant="info"
+                      onClick={() => handleEdit(row)}>
                       <i className="fa fa-pencil" aria-hidden="true" />
-                    </Button>{' '} */}
-                    <OverlayTrigger trigger="click" placement="right" overlay={popover}>
-                      <Button variant="success">Click me to see</Button>
-                    </OverlayTrigger>
+                    </Button>{' '}
                     <Button variant="danger"
                       onClick={() => handleDelete(row)}>
                       <i className="fa fa-trash" aria-hidden="true" />
@@ -114,10 +96,17 @@ function PersonasTable() {
         </Table>
 
         : <p>No existen personas</p>}
+
       {/* VER LIBROS MODAL */}
       <PersonasVerLibrosOverlay
         show={verLibrosModalShow}
         onHide={() => setVerLibrosModalShow(false)}
+      />
+      
+      {/* AGREGAR/EDIT MODAL */}
+      <PersonasAgregarOverlay
+        show={editPersonaModalShow}
+        onHide={() => setEditPersonaModalShow(false)}
       />
 
       {/* DELETE MODAL */}
