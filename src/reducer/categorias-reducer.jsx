@@ -1,6 +1,8 @@
 const estadoInicial = {
   categoriasList: [],
   categoriasByLibro: [],
+  categoriaToDelete: {},
+  categoriaToSave: {},
 };
 
 function categoriasReducer(state = estadoInicial, action) {
@@ -9,14 +11,14 @@ function categoriasReducer(state = estadoInicial, action) {
     case 'LISTAR_CATEGORIAS':
       nuevoState.categoriasList = action.categoriasList;
       return nuevoState;
-    case 'CATEGORIAS_TO_SAVE':
-      nuevoState.categoriasToSave = action.categoriasToSave;
+    case 'CATEGORIA_TO_SAVE':
+      nuevoState.categoriaToSave = action.categoriaToSave;
       return nuevoState;
-    case 'DELETE_CATEGORIAS':
-      nuevoState.categoriasToDelete = action.categoriasToDelete;
+    case 'DELETE_CATEGORIA':
+      nuevoState.categoriaToDelete = action.categoriaToDelete;
       return nuevoState;
-    case 'CATEGORIAS_BY_LIBRO':
-      nuevoState.categoriasByLibro = action.categoriasByLibro;
+    case 'LIBROS_BY_CATEGORIA':
+      nuevoState.librosByCategoria = action.librosByCategoria;
       return nuevoState;
     default:
       return state;

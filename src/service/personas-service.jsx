@@ -6,14 +6,14 @@
 import axios from 'axios';
 
 const baseURL = 'http://localhost:3000';
-const Personas = '/personas';
+const personas = '/personas';
 const librosByPersona = '/librosByPersona/';
 const postPersona = '/persona';
 const editPersona = '/persona/';
 const deletePersona = '/persona/';
 
 export const getPersonas = async () => {
-  const respuesta = await axios.get(baseURL + Personas);
+  const respuesta = await axios.get(baseURL + personas);
   return respuesta;
 };
 

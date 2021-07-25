@@ -1,13 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
 import CategoriasDeleteOverlay from './categorias-delete-overlay';
 import { useToasts } from 'react-toast-notifications';
 import CategoriasVerLibrosOverlay from './categorias-ver-libros-overlay';
-import { getCategorias } from '../service/categorias-service';
+import { getCategorias, getLibrosByCategoria } from '../service/categorias-service';
 
 function CategoriasTable() {
   const dispatch = useDispatch();
@@ -21,34 +20,29 @@ function CategoriasTable() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const CategoriasResponse = await getCategorias();
-        dispatch({ type: 'LISTAR_CATEGORIAS', categoriasList: CategoriasResponse.data });
+        const categoriasResponse = await getCategorias();
+        dispatch({ type: 'LISTAR_CATEGORIAS', categoriasList: categoriasResponse.data });
       } catch (error) {
         console.log(error);
-        addToast(error.ERROR, { appearance: 'success', autoDismiss: true });
+        addToast(error, { appearance: 'success', autoDismiss: true });
       }
     }
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(categoriasRow);
-  }, [categoriasRow]);
-
   const handleVerLibrosxCategorias = async (id) => {
     try {
-        //Cambiar la parte de id por el correspondiente a libro
-      const respuesta = await axios.get('http://localhost:3000/categoriasByLibros/' + id);
-      dispatch({ type: 'CATEGORIAS_BY_LIBROS', categoriasByLibros: respuesta.data });
-
+      const respuesta = await getLibrosByCategoria(id);
+      dispatch({ type: 'LIBROS_BY_CATEGORIA', librosByCategoria: respuesta.data });
       setVerLibrosModalShowxCategorias(true);
     } catch (error) {
       console.log(error);
+      addToast(error, { appearance: 'error', autoDismiss: true });
     }
   };
 
   const handleDelete = (row) => {
-    dispatch({ type: 'DELETE_CATEGORIAS', categoriasToDelete: row });
+    dispatch({ type: 'DELETE_CATEGORIA', categoriaToDelete: row });
     setDeleteModalShow(true);
   };
 
@@ -60,10 +54,7 @@ function CategoriasTable() {
             <tr>
               <th>#</th>
               <th>Generos</th>
-              <th> </th>
-              <th> </th>
-              <th> </th>
-              <th> </th>
+              <th>Opciones</th>
             </tr>
           </thead>
           <tbody>
@@ -72,15 +63,9 @@ function CategoriasTable() {
                 <tr key={index}>
                   <td>{index}</td>
                   <td>{row.nombre}</td>
-                  <td> </td>
-                  <td> </td>
-                  <td> </td>
                   <td>
                     <Button variant="light"
                       onClick={() => handleVerLibrosxCategorias(row.id)}>Libros
-                    </Button>{' '}
-                    <Button variant="info">
-                      <i className="fa fa-pencil" aria-hidden="true" />
                     </Button>{' '}
                     <Button variant="danger"
                       onClick={() => handleDelete(row)}>
@@ -94,6 +79,7 @@ function CategoriasTable() {
         </Table>
 
         : <p>No existen Categorias</p>}
+        
       {/* VER LIBROS MODAL */}
       <CategoriasVerLibrosOverlay
         show={verLibrosModalShowxCategorias}

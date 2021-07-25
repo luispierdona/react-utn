@@ -20,9 +20,11 @@ function PersonasDeleteOverlay(props) {
       dispatch({ type: 'DELETE_PERSONA', personaToDelete: {} });
 
       addToast(deleteResponse?.data?.msg, { appearance: 'success', autoDismiss: true });
+      props.onHide();
     } catch (e) {
       console.log(e.message);
       addToast(e.request.response, { appearance: 'error', autoDismiss: true });
+      props.onHide();
     }
   };
 
@@ -62,7 +64,7 @@ function PersonasDeleteOverlay(props) {
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="outline-danger" onClick={ () => {handleSubmit(); props.onHide()} } >Borrar</Button>
+        <Button variant="outline-danger" onClick={ handleSubmit } >Borrar</Button>
         <Button variant="primary" onClick={props.onHide}>Cerrar</Button>
       </Modal.Footer>
     </Modal>

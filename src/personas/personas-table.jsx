@@ -26,11 +26,11 @@ function PersonasTable() {
         dispatch({ type: 'LISTAR_PERSONAS', personasList: personasResponse.data });
       } catch (error) {
         console.log(error);
-        addToast(error.ERROR, { appearance: 'error', autoDismiss: true });
+        addToast(error, { appearance: 'error', autoDismiss: true });
       }
     }
     fetchData();
-  });
+  }, []);
 
   const handleVerLibros = async (id) => {
     try {
@@ -39,7 +39,7 @@ function PersonasTable() {
       setVerLibrosModalShow(true);
     } catch (error) {
       console.log(error);
-      addToast(error.ERROR, { appearance: 'error', autoDismiss: true });
+      addToast(error, { appearance: 'error', autoDismiss: true });
     }
   };
 

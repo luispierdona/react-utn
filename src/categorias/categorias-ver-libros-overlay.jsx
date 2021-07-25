@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 function CategoriasVerLibrosOverlay(props) {
 
-  const librosByCategoria = useSelector(state => state.categorias.categoriasByLibro);
+  const librosByCategoria = useSelector(state => state.categorias.librosByCategoria);
 
   return (
     <Modal
@@ -19,7 +19,7 @@ function CategoriasVerLibrosOverlay(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
+        <>
           {librosByCategoria.length > 0 ?
             <ListGroup variant="flush">
               {librosByCategoria.map((row, index) => (
@@ -32,7 +32,7 @@ function CategoriasVerLibrosOverlay(props) {
               ))}
             </ListGroup>
             : <p>No hay libros para el genero seleccionado</p>}
-        </p>
+        </>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Cerrar</Button>

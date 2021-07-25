@@ -2,17 +2,10 @@ import React from 'react';
 import { useState } from 'react';
 import { Container, Button, Navbar } from 'react-bootstrap';
 import PersonasAgregarOverlay from './personas-agregar-overlay';
-import { useDispatch } from 'react-redux';
 
 function PersonasTableTopbar() {
-  const dispatch = useDispatch();
 
   const [modalShow, setModalShow] = useState(false);
-
-  function handleAdd() {
-    dispatch({ type: 'PERSONA_TO_SAVE', personaToSave: { } });
-    setModalShow(true);
-  }
 
   return (
     <>
@@ -22,7 +15,7 @@ function PersonasTableTopbar() {
             <Navbar.Brand>PERSONAS</Navbar.Brand>
           </div>
           <Navbar.Brand className="text-right">
-            <Button variant="info" onClick={() => handleAdd()}>
+            <Button variant="info" onClick={() => setModalShow(true)}>
               Nuevo Registro
             </Button>{' '}
           </Navbar.Brand>
