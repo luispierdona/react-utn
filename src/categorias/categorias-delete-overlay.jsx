@@ -8,7 +8,7 @@ function CategoriasDeleteOverlay(props) {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
-  const categoriaToDelete = useSelector(state => state.Categorias.categoriaToDelete);
+  const categoriaToDelete = useSelector(state => state.categorias.categoriasToDelete);
 
   const handleSubmit = async () => {
     try {

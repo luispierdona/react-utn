@@ -13,7 +13,7 @@ function CategoriasTable() {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
-  const CategoriasRow = useSelector(state => state.Categorias.CategoriasList);
+  const categoriasRow = useSelector(state => state.categorias.categoriasList);
 
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [verLibrosModalShowxCategorias, setVerLibrosModalShowxCategorias] = useState(false);
@@ -32,8 +32,8 @@ function CategoriasTable() {
   }, []);
 
   useEffect(() => {
-    console.log(CategoriasRow);
-  }, [CategoriasRow]);
+    console.log(categoriasRow);
+  }, [categoriasRow]);
 
   const handleVerLibrosxCategorias = async (id) => {
     try {
@@ -41,7 +41,7 @@ function CategoriasTable() {
       const respuesta = await axios.get('http://localhost:3000/categoriasByLibros/' + id);
       dispatch({ type: 'CATEGORIAS_BY_LIBROS', categoriasByLibros: respuesta.data });
 
-      setVerLibrosModalShow(true);
+      setVerLibrosModalShowxCategorias(true);
     } catch (error) {
       console.log(error);
     }

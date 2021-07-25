@@ -1,5 +1,6 @@
 const estadoInicial = {
   categoriasList: [],
+  categoriasByLibro: [],
 };
 
 function categoriasReducer(state = estadoInicial, action) {

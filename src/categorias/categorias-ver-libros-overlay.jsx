@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 function CategoriasVerLibrosOverlay(props) {
 
-  const librosByCategoria = useSelector(state => state.categorias.librosByCategoria);
+  const librosByCategoria = useSelector(state => state.categorias.categoriasByLibro);
 
   return (
     <Modal
