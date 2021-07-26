@@ -50,7 +50,10 @@ function LibrosAgregarOverlay(props) {
     >
       <Modal.Header className="text-light bg-dark">
         <Modal.Title id="contained-modal-title-vcenter">
-          Agregar Nuevo Libro
+          {libroToSave.id ? 
+          <h3>Editar Libro</h3>
+          : <h3>Agregar Nuevo Libro</h3>
+          }
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -87,6 +90,7 @@ function LibrosAgregarOverlay(props) {
                   as="select"
                   placeholder="Categoria"
                   name="categoria_id"
+                  defaultValue={libroToSave?.categoria_id}
                   onChange={handleChangeForm}
                 >
                   <option value="null">Elija una opcion...</option>
@@ -102,6 +106,7 @@ function LibrosAgregarOverlay(props) {
                   as="select"
                   placeholder="Persona"
                   name="persona_id"
+                  defaultValue={libroToSave?.persona_id}
                   onChange={handleChangeForm}
                 >
                   <option value="null">Elija una opcion...</option>

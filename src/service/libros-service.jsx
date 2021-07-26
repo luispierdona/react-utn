@@ -6,10 +6,13 @@
 import axios from 'axios';
 
 const baseURL = 'http://localhost:3000';
-const libros = '/libros';
+// const libros = '/libros';
+const libros = '/librosExtended';
 const postLibro = '/libro';
 const editLibro = '/libro/';
 const deleteLibro = '/libro/';
+const prestar = '/libro/prestar/';
+const devolver = '/libro/devolver/';
 
 export const getLibros = async () => {
   const respuesta = await axios.get(baseURL + libros);
@@ -23,5 +26,21 @@ export const saveLibro = async (libro) => {
   } else {
     respuesta = await axios.post(baseURL + postLibro, libro);
   }
+  return respuesta;
+};
+
+export const prestarLibro = async (personaId = 0, libroId = 0) => {
+  const body = {persona_id: personaId};
+  const respuesta = await axios.put(baseURL + prestar + libroId, body);
+  return respuesta;
+};
+
+export const devolverLibro = async (id = 0) => {
+  const respuesta = await axios.put(baseURL + devolver + id);
+  return respuesta;
+};
+
+export const borrarLibro = async (id = 0) => {
+  const respuesta = await axios.delete(baseURL + deleteLibro + id);
   return respuesta;
 };

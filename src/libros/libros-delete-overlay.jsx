@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal, Button, Container, Col, Row } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import { useToasts } from 'react-toast-notifications';
+import { borrarLibro, getLibros } from '../service/libros-service';
 
 function LibrosDeleteOverlay(props) {
   const dispatch = useDispatch();
@@ -12,14 +12,14 @@ function LibrosDeleteOverlay(props) {
 
   const handleSubmit = async () => {
     try {
-      const id = libroToDelete?.id;
-      const serverResponse = await axios.delete('http://localhost:3000/libro/' + id);
-      const respuesta = await axios.get('http://localhost:3000/libros');
+      const id = libroToDelete.id;
+      const deleteResponse = await borrarLibro(id);
+      const getLibrosResponse = await getLibros();
       
-      dispatch({ type: 'LISTAR_LIBROS', librosList: respuesta.data });
-      dispatch({ type: 'DELETE_LIBRO', libroToDelete: {} });
+      dispatch({ type: 'LISTAR_LIBROS', librosList: getLibrosResponse.data });
+      dispatch({ type: 'DELETE_LIBRO', libroToDelete: { } });
 
-      addToast(serverResponse?.data?.msg, { appearance: 'success', autoDismiss: true });
+      addToast(deleteResponse?.data?.msg, { appearance: 'success', autoDismiss: true });
     } catch (e) {
       console.log(e.message);
       addToast(e.request.response, { appearance: 'error', autoDismiss: true });
@@ -35,7 +35,7 @@ function LibrosDeleteOverlay(props) {
     >
       <Modal.Header className="text-light bg-danger">
         <Modal.Title id="contained-modal-title-vcenter">
-          Borrar Persona
+          Borrar Libro
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -51,14 +51,6 @@ function LibrosDeleteOverlay(props) {
               <span><b>Descripcion: </b>{libroToDelete?.descripcion}</span>
             </Col>
           </Row>
-          {/* <Row className="mb-3">
-            <Col md="6">
-              <span><b>Categoria: </b>{libroToDelete?.categoria}</span>
-            </Col>
-            <Col md="6">
-              <span><b>Prestado: </b>{libroToDelete?.prestado}</span>
-            </Col>
-          </Row> */}
         </Container>
       </Modal.Body>
       <Modal.Footer>
